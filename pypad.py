@@ -75,3 +75,47 @@ def run():
 
 run()
 
+import fcntl
+from subprocess import Popen, PIPE
+import os
+
+
+def setNonBlocking(fd):
+    """
+    Set the file description of the given file descriptor to non-blocking.
+    """
+    flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+    flags = flags | os.O_NONBLOCK
+    fcntl.fcntl(fd, fcntl.F_SETFL, flags)
+
+
+def run_2():
+
+    args = EDITOR.split() + ["tmp.py"]
+    print(args)
+    p = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    setNonBlocking(p.stdout)
+    setNonBlocking(p.stderr)
+
+    p.stdin.write(b"1\n")
+    while True:
+        try:
+            out1 = p.stdout.read()
+            print(out1)
+        except IOError:
+            continue
+        else:
+            break
+    out1 = p.stdout.read()
+    p.stdin.write(b"5\n")
+    while True:
+        try:
+            out2 = p.stdout.read()
+            print(out2)
+        except IOError:
+            continue
+        else:
+            break
+
+
+# run_2()
