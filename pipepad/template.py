@@ -30,14 +30,28 @@ all_lines = GET_ALL_LINES()
 The sample code below will simply print each line from input
 """
 import sys
+import pipepad
 
 print(sys.path)
-from pypad import line_generator
-import pypad
+from pipepad import user_lib
+
+for line in pipepad.line_generator():
+    tot = sum(int(i) for i in line.split())
+    print(tot)
 
 
-print("\n\n\n\n\n\foooooooo\n\n\n\n")
+for line in pipepad.all_lines():
+    for el in line.split(" "):
+        print(el)
+    pass
 
 
-for line in pypad.line_generator():
-    print(line)
+
+# There are two ways to save a pipepad:
+
+## First is by registering it.
+pipepad.register(repo="local", name="sum_ints")
+
+
+## The second is by saving it to a file of your choice
+pipepad.save()

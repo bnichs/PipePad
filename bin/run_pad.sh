@@ -14,4 +14,6 @@ CURDIR=/home/ben/workplace/pipepad
 
 export PYTHONPATH=$PYPATH:$CURDIR
 
+
+export PIPEPAD_FIFO=$FIFO
 python "$PAD"
