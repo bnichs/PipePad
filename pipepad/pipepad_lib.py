@@ -46,7 +46,8 @@ class Processor:
 
 
 def get_template_pad():
-    template_pad = PipePad.load_from_file(TEMPLATE_PATH)
+    pad_record = PadRecord.load_from_file(TEMPLATE_PATH)
+    template_pad = pad_record.pad
     return template_pad
 
 

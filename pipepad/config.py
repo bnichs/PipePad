@@ -16,3 +16,6 @@ RUN_PAD_PATH = os.path.join(BIN_PATH, "run_pad.sh")
 
 
 DEFAULT_REPO = "local"
+
+
+PAD_EXTENSION = "ppad"
