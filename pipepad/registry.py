@@ -36,6 +36,8 @@ class PadRegistry:
         logger.debug("Registering pad with name %s at time %s", name, dt)
 
         record = PadRecord(name, dt, pad)
+
+        record.save_to_file()
         print(repr(record))
 
 
