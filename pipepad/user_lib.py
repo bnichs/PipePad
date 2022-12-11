@@ -27,3 +27,17 @@ def line_generator():
         yield from f
 
 
+def all_lines():
+    pass
+
+
+def process_line(line):
+    pass
+
+
+def register(name: str, repo: str=DEFAULT_REPO):
+    pass
+
+
+def save():
+    pass
