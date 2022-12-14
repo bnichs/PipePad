@@ -19,6 +19,18 @@ logger = logging.getLogger(__name__)
 
 from collections import OrderedDict
 
+#
+# class UnsortableList(list):
+#     def sort(self, *args, **kwargs):
+#         pass
+#
+#
+# class UnsortableOrderedDict(OrderedDict):
+#     def items(self, *args, **kwargs):
+#         return UnsortableList(OrderedDict.items(self, *args, **kwargs))
+#
+#
+# yaml.add_representer(UnsortableOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
 
 class MisssingHeaderField(Exception):
     pass
@@ -160,9 +172,8 @@ class PadRecord(object):
         header.add(HEADER_LANG_KEY, self.pad.language.name)
 
         txt = header.get_text()
-        print(txt)
-
         txt = self.pad.language.comment_block(txt)
+
         return txt
 
     @classmethod
