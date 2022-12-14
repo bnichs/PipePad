@@ -153,18 +153,28 @@ class PadRecord(object):
     def __post_init__(self):
         self.date_added = self.date_added or datetime.now()
 
-    def get_pad_name(self):
+    # TODO Put in registry.py?
+    def get_registry_pad_name(self):
+        """
+        Get a registry name for this pad
+
+        Registry name: 2021-12-12T23-13-12.{hash}.pad.py
+        """
         logger.debug("Getting pad file name for %s", self)
-        return Path(f"foo.{PAD_EXTENSION}.{self.pad.language.extension}")
+        return Path(f"{self.date_added.isoformat()}.{self.pad.get_short_hash()}.{PAD_EXTENSION}.{self.pad.language.extension}")
 
-    # def pad_header(self):
-    #     """The header at the beginning of pad text with all the info about the pad
-    #
-    #     Full output Depends on the language the pad is in, the comment function takes care of that
-    #
-    #     """
+    def get_generic_pad_name(self):
+        """
+        Get a generic name for this pad
 
-    def get_pad_header(self) -> str:
+        Generic name: hello-foo.pad.py
+
+        Registry name: 2021-12-12T23-13-12.{hash}.pad.py
+        """
+        logger.debug("Getting pad file name for %s", self)
+        return Path(f"{self.pad_name}.{PAD_EXTENSION}.{self.pad.language.extension}")
+
+    def generate_pad_header(self) -> str:
         header = PadHeader()
         header.add(HEADER_NAME_KEY, self.pad_name)
         header.add(HEADER_DATE_KEY, self.date_added)
