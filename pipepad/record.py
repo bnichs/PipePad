@@ -91,16 +91,55 @@ class PadHeader(object):
             raise NoHeaderFound()
         header_str = contents[start_loc:end_loc]
 
+        # Now, scan for the next newline after our comment block
+        start_of_content = contents.find("\n", end_loc) + 1
+        start_of_content = contents.find("\n", start_of_content) + 1
+
+        remaining = contents[start_of_content:]
+        return PadHeader.from_string(header_str), remaining
+
+    @classmethod
+    def from_string(cls, header_str: str) -> "PadHeader":
+        logger.debug("Loading header from string")
+
+        with io.StringIO() as stream:
+            stream.write(header_str)
+            stream.seek(0)
+            data = yaml.safe_load(stream)
+
+            header = cls.from_data(data)
+            logger.debug("Got header %s", header)
+            return header
+
+    @classmethod
+    def from_data(cls, data: Dict[str, Any]) -> "PadHeader":
+        header = PadHeader()
+        header.add_data(data)
+        header.ensure_required_fields()
+        return header
+
+    def get_language(self) -> PadLanguage:
+        return PadLanguage.from_string(self._store[HEADER_LANG_KEY])
+
+    def get_date(self) -> datetime:
+        return self._store[HEADER_DATE_KEY]
+
+    def get_hash(self) -> str:
+        return self._store[HEADER_HASH_KEY]
+
+    def get_name(self) -> str:
+        return self._store[HEADER_NAME_KEY]
 
 
 @dataclass
 class PadRecord(object):
     """A pad that can be saved"""
     pad_name: str
-    date_added: date
     pad: PipePad
+    date_added: date = None
 
-
+    def __post_init__(self):
+        self.date_added = self.date_added or datetime.now()
 
     def get_pad_name(self):
         logger.debug("Getting pad file name for %s", self)
