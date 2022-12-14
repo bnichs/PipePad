@@ -1,5 +1,6 @@
 import io
 import logging
+import os.path
 from dataclasses import dataclass
 from datetime import date, datetime
 from os import PathLike
@@ -69,7 +70,8 @@ class PadRecord(object):
 
 
     def get_pad_name(self):
-        return Path(f"foo.{PAD_EXTENSION}.{self.pad.extension}")
+        logger.debug("Getting pad file name for %s", self)
+        return Path(f"foo.{PAD_EXTENSION}.{self.pad.language.extension}")
 
     def pad_header(self):
         """The header at the beginning of pad text with all the info about the pad
