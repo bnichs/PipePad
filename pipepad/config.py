@@ -6,8 +6,12 @@ APP_NAME = "pipepad"
 MODULE_DIR = os.path.dirname(os.path.realpath(__file__))
 PACKAGE_DIR = os.path.dirname(MODULE_DIR)
 
+
+TEMPLATE_DIR = os.path.join(PACKAGE_DIR, "templates")
+
+# TODO for python only
 TEMPLATE_FILE = "template.py"
-TEMPLATE_PATH = os.path.join(MODULE_DIR, TEMPLATE_FILE)
+TEMPLATE_PATH = os.path.join(TEMPLATE_DIR, TEMPLATE_FILE)
 
 BIN_PATH = os.path.join(PACKAGE_DIR, "bin")
 
