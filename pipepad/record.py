@@ -186,6 +186,11 @@ class PadRecord(object):
 
         return txt
 
+    def get_full_text(self):
+        txt = self.generate_pad_header()
+        txt += self.pad.contents
+        return txt
+
     @classmethod
     def load_from_file(cls, filename, ignore_hash_mismatch=False):
         logger.debug("Loading pad from file %s", filename)
@@ -212,21 +217,28 @@ class PadRecord(object):
 
             return cls(pad=pad, date_added=dt, pad_name=name)
 
-    def save_to_file(self, fname: PathLike=None, save_dir: PathLike=None) -> PathLike:
+    def save_to_file(self, fname: PathLike=None, save_dir: PathLike=None, fpath: PathLike=None) -> PathLike:
+        """
+        Save this pad record to a file
+        """
+        if fpath:
+            fname = os.path.basename(fpath)
+            save_dir = os.path.dirname(fpath)
+
+        # TODO: Remember how to boolean logic
         if save_dir and fname:
             fpath = os.path.join(save_dir, fname)
         elif save_dir:
-            fname = self.get_pad_name()
+            fname = self.get_generic_pad_name()
             fpath = os.path.join(save_dir, fname)
         elif fname:
             fpath = os.path.abspath(fname)
         else:
-            fname = self.get_pad_name()
+            fname = self.get_generic_pad_name()
             fpath = os.path.abspath(fname)
 
         with open(fpath, 'w') as f:
-            txt = self.get_pad_header()
-            txt += self.pad.contents
+            txt = self.get_full_text()
             f.write(txt)
         logger.debug("Saved pad %s to %s", self.pad_name, fpath)
 

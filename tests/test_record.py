@@ -25,6 +25,8 @@ class TestRecord():
         assert new_record.pad == record.pad
 
         assert new_record.date_added
+        assert new_record.pad.get_hash()
+        assert new_record.pad.contents
 
         # raise
 
