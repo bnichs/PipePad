@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from os import PathLike
 from pathlib import Path
-from typing import Any
+from typing import Any, Tuple, Dict
 
 import yaml
 
@@ -29,8 +29,8 @@ class UnsortableOrderedDict(OrderedDict):
         return UnsortableList(OrderedDict.items(self, *args, **kwargs))
 
 
-yaml.add_representer(UnsortableOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
-
+class HashMismatch(Exception):
+    pass
 
 
 class PadHeader(object):
@@ -93,6 +93,7 @@ class PadRecord(object):
 
     @classmethod
     def load_from_file(cls, filename):
+        logger.debug("Loading pad from file %s", filename)
         with open(filename, 'rb') as f:
             contents = f.read().decode("utf-8")
 
@@ -102,14 +103,39 @@ class PadRecord(object):
             pad = PipePad(contents=contents, language=lang)
             return cls(pad=pad, date_added=dt, pad_name="foo")
 
-    def save_to_file(self, fname: PathLike=None):
-        fname = fname or self.get_pad_name()
-        logger.debug("Saved pad %s to %s", self.pad_name, fname)
-        with open(fname, 'w') as f:
+            dt = header.get_date()
+            lang = header.get_language()
+            name = header.get_name()
+            header_hash = header.get_hash()
+            pad = PipePad(contents=contents, language=lang)
+            pad_hash = pad.get_hash()
+
+            if header_hash != pad_hash:
+                print(repr(pad.contents))
+
+                raise HashMismatch(header_hash, pad_hash)
+
+            return cls(pad=pad, date_added=dt, pad_name=name)
+
+    def save_to_file(self, fname: PathLike=None, save_dir: PathLike=None) -> PathLike:
+        if save_dir and fname:
+            fpath = os.path.join(save_dir, fname)
+        elif save_dir:
+            fname = self.get_pad_name()
+            fpath = os.path.join(save_dir, fname)
+        elif fname:
+            fpath = os.path.abspath(fname)
+        else:
+            fname = self.get_pad_name()
+            fpath = os.path.abspath(fname)
+
+        with open(fpath, 'w') as f:
             txt = self.get_pad_header()
-            txt += "\n"
             txt += self.pad.contents
             f.write(txt)
+        logger.debug("Saved pad %s to %s", self.pad_name, fpath)
+
+        return fpath
 
     # def __repr__(self):
     #     return f"PadRecord(pad_name={self.pad_name}, " \

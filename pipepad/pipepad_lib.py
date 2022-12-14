@@ -9,40 +9,15 @@ from datetime import datetime
 from typing import TextIO
 
 from pipepad.config import APP_NAME, TEMPLATE_PATH, RUN_PAD_PATH
+from pipepad.pad import PipePad
+from pipepad.record import PadRecord
 
 logger = logging.getLogger()
 
 
-class PadRegistry:
-    """Persists pads to be used later"""
-    pass
-
-
-@dataclass
-class PipePad:
-    """Pad object containing the contents of a pad"""
-    contents: str
-
-    def __repr__(self):
-        return f"PipePad(hash={self.hash()}, contents={self.short_contents})"
-
-    @classmethod
-    def load_from_file(cls, filename):
-        with open(filename, 'rb') as f:
-            contents = f.read().decode("utf-8")
-            return cls(contents)
-
-    def hash(self):
-        return hashlib.sha256(self.contents.encode("utf-8")).hexdigest()
-
-    @property
-    def short_contents(self):
-        return self.contents.split("\n")[10]
-
-
-
-class Processor:
-    """Processes inputs using a given Pipepad"""
+def get_template_pad_record():
+    pad_record = PadRecord.load_from_file(TEMPLATE_PATH)
+    return pad_record
 
 
 def get_template_pad():
@@ -72,7 +47,6 @@ def get_pad_from_user():
         pad_contents = tf.read()
 
         user_pad = PipePad(pad_contents.decode("utf-8"))
-        print(user_pad)
         # return
         # log_stty()
         # run_editor(tf)
@@ -94,7 +68,6 @@ class PadProcessor:
             tf.write(pad.contents.encode("utf-8"))
             tf.flush()
 
-            print(sys.path)
             os.system(f"{RUN_PAD_PATH} {tf.name} {fifo} '{sys.path}'")
 
         logger.debug("Done running pad")
@@ -145,7 +118,6 @@ def main():
     # Now get code from user
     pad = get_pad_from_user()
 
-    print(pad)
 
     proc = PadProcessor()
     proc.process_pad(pad, fifo=stdin_proc.fifo)

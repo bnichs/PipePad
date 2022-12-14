@@ -1,4 +1,14 @@
 """
+START_HEADER
+pipepad-version: v1
+name: main-template
+date: 2022-12-11 11:17:23.624458
+language: python
+hash: sha256-fooo
+END_HEADER
+"""
+
+"""
 # Welcome To Pypad!!!
 
 # The results of the command you piped into pypad are available to this pyton script. There are various ways to access them:
@@ -27,13 +37,11 @@ all_lines = GET_ALL_LINES()
 
 
 
-The sample code below will simply print each line from input
+
+%%%FIRST_ELEMENTS%%%
 """
-import sys
 import pipepad
 
-print(sys.path)
-from pipepad import user_lib
 
 for line in pipepad.line_generator():
     tot = sum(int(i) for i in line.split())
