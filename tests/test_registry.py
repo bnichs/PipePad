@@ -4,7 +4,10 @@ from pathlib import Path
 from unittest import TestCase
 from uuid import uuid4
 
-from pipepad.pipepad_lib import get_template_pad
+import pytest
+
+from pipepad.pipepad_lib import get_template_pad, get_template_pad_record
+from pipepad.record import PadHeader, MisssingHeaderField
 from pipepad.registry import PadRegistry
 
 
@@ -15,6 +18,28 @@ def get_test_pad():
     pad = get_template_pad()
     return pad
     pass
+
+
+class TestPadHeader(TestCase):
+    def test_create_header(self):
+        pad = get_template_pad_record()
+        header = pad.get_pad_header()
+
+        print(header)
+
+    def test_ensure_fields(self):
+        full_dict = {field: "foo" for field in PadHeader.REQUIRED_FIELDS}
+        header = PadHeader.from_data(full_dict)
+
+        while len(full_dict):
+            el = list(full_dict.keys())[0]
+            full_dict.pop(el)
+
+            with pytest.raises(MisssingHeaderField):
+                print(full_dict)
+                header = PadHeader.from_data(full_dict)
+                print(header)
+
 
 
 class TestRegistry(TestCase):

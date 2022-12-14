@@ -20,14 +20,12 @@ logger = logging.getLogger(__name__)
 from collections import OrderedDict
 
 
-class UnsortableList(list):
-    def sort(self, *args, **kwargs):
-        pass
+class MisssingHeaderField(Exception):
+    pass
 
 
-class UnsortableOrderedDict(OrderedDict):
-    def items(self, *args, **kwargs):
-        return UnsortableList(OrderedDict.items(self, *args, **kwargs))
+class NoHeaderFound(Exception):
+    pass
 
 
 class HashMismatch(Exception):
@@ -36,27 +34,62 @@ class HashMismatch(Exception):
 
 class PadHeader(object):
     HEADER_VERSION = "v1"
+    REQUIRED_FIELDS = [
+        # HEADER_VERSION_KEY,
+        HEADER_DATE_KEY,
+        HEADER_NAME_KEY,
+        HEADER_LANG_KEY,
+        HEADER_HASH_KEY
+    ]
 
     def __init__(self):
         self._store = {} #UnsortableOrderedDict()
-        self._store["pipepad-version"] = self.HEADER_VERSION
+        self._store[HEADER_VERSION_KEY] = self.HEADER_VERSION
+
+    def __repr__(self):
+        els = ', '.join(f"{name}={val}" for name, val in self)
+        return f"PadHeader({els})"
+
+    def __iter__(self):
+        yield from self._store.items()
 
     def add(self, name: str, val: Any):
         self._store[name] = val
 
+    def add_data(self, data: Dict[str, Any]):
+        for name, val in data.items():
+            self.add(name, val)
+
+    def ensure_required_fields(self):
+        for field in self.REQUIRED_FIELDS:
+            if field not in self._store:
+                raise MisssingHeaderField(field)
+
     def encode(self):
         """Encode this header using whatever format"""
-
+        self.ensure_required_fields()
         with io.StringIO() as stream:
             yaml.dump(self._store, stream, sort_keys=False)
             txt = stream.getvalue()
             return txt
 
     def get_text(self):
-        return self.encode()
-        pass
+        txt = f"{HEADER_START_STRING}\n"
+        txt += self.encode()
+        txt += f"{HEADER_END_STRING}\n"
+        return txt
 
+    @classmethod
+    def extract_header(cls, contents: str) -> Tuple["PadHeader", str]:
+        start_loc = contents.find(HEADER_START_STRING)
+        if start_loc == -1:
+            raise NoHeaderFound()
+        start_loc = start_loc + len(HEADER_START_STRING) + 1
 
+        end_loc = contents.find(HEADER_END_STRING)
+        if end_loc == -1:
+            raise NoHeaderFound()
+        header_str = contents[start_loc:end_loc]
 
 
 
@@ -73,19 +106,19 @@ class PadRecord(object):
         logger.debug("Getting pad file name for %s", self)
         return Path(f"foo.{PAD_EXTENSION}.{self.pad.language.extension}")
 
-    def pad_header(self):
-        """The header at the beginning of pad text with all the info about the pad
-
-        Full output Depends on the language the pad is in, the comment function takes care of that
-
-        """
+    # def pad_header(self):
+    #     """The header at the beginning of pad text with all the info about the pad
+    #
+    #     Full output Depends on the language the pad is in, the comment function takes care of that
+    #
+    #     """
 
     def get_pad_header(self) -> str:
         header = PadHeader()
-        header.add("name", self.pad_name)
-        header.add("date", self.date_added)
-        header.add("hash-sha256", self.pad.get_hash())
-        header.add("language", self.pad.language.name)
+        header.add(HEADER_NAME_KEY, self.pad_name)
+        header.add(HEADER_DATE_KEY, self.date_added)
+        header.add(HEADER_HASH_KEY, self.pad.get_hash())
+        header.add(HEADER_LANG_KEY, self.pad.language.name)
 
         txt = header.get_text()
         print(txt)
@@ -99,11 +132,7 @@ class PadRecord(object):
         with open(filename, 'rb') as f:
             contents = f.read().decode("utf-8")
 
-            # TODO
-            dt = datetime.now()
-            lang = PythonLanguage()
-            pad = PipePad(contents=contents, language=lang)
-            return cls(pad=pad, date_added=dt, pad_name="foo")
+            header, contents = PadHeader.extract_header(contents)
 
             dt = header.get_date()
             lang = header.get_language()
