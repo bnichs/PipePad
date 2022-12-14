@@ -218,6 +218,16 @@ class PadRecord(object):
 
         return fpath
 
+    def differs_from_file(self, fpath: PathLike):
+        """Determine if the text version of this records differs from a given file"""
+        txt = self.get_full_text()
+
+        with open(fpath) as f:
+            fil_txt = f.read()
+
+            return fil_txt != txt
+
+
     # def __repr__(self):
     #     return f"PadRecord(pad_name={self.pad_name}, " \
     #            f"pad_hash={self.pad.hash}, " \

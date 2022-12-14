@@ -3,8 +3,8 @@ START_HEADER
 pipepad-version: v1
 name: main-template
 date: 2022-12-11 11:17:23.624458
+hash: a910ecd72a01881e4d012319e0b72455df8667da35a43df5e361b56532d5be5c
 language: python
-hash: sha256-fooo
 END_HEADER
 """
 
