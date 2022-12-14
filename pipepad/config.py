@@ -34,3 +34,8 @@ HEADER_DATE_KEY = "date"
 HEADER_NAME_KEY = "name"
 HEADER_LANG_KEY = "language"
 HEADER_HASH_KEY = "hash"
+
+
+
+# How many characters for a short hash
+SHORT_HASH_LENGTH = 8

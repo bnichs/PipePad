@@ -1,6 +1,7 @@
 import hashlib
 from dataclasses import dataclass
 
+from pipepad.config import SHORT_HASH_LENGTH
 from pipepad.language import PadLanguage
 
 
@@ -25,6 +26,11 @@ class PipePad:
         num = num if len(lines) > num else len(lines) - 1
 
         return self.contents.split("\n")[num]
+
+    def get_short_hash(self) -> str:
+        h = self.get_hash()
+        print(h)
+        return h[:SHORT_HASH_LENGTH]
 
     @property
     def extension(self):
