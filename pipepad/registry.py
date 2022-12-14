@@ -44,7 +44,11 @@ class PadRegistry:
     repo_name: str
     storage_path: PathLike
 
+    def __post_init__(self):
+        logger.debug("Setting up registry %s at %s", self.repo_name, self.storage_path)
+
     def _load_registry(self):
+        # TODO
         pass
 
     def get_pad_dir(self, pad_name: str) -> PathLike:
