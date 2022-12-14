@@ -177,7 +177,7 @@ class PadRecord(object):
         return txt
 
     @classmethod
-    def load_from_file(cls, filename):
+    def load_from_file(cls, filename, ignore_hash_mismatch=False):
         logger.debug("Loading pad from file %s", filename)
         with open(filename, 'rb') as f:
             contents = f.read().decode("utf-8")
@@ -192,9 +192,13 @@ class PadRecord(object):
             pad_hash = pad.get_hash()
 
             if header_hash != pad_hash:
-                print(repr(pad.contents))
-
-                raise HashMismatch(header_hash, pad_hash)
+                args = ("Hash mismatch, header=%s pad=%s", header_hash, pad_hash)
+                if ignore_hash_mismatch:
+                    print(logger.level)
+                    logger.debug(*args)
+                else:
+                    logger.error(*args)
+                    raise HashMismatch(header_hash, pad_hash)
 
             return cls(pad=pad, date_added=dt, pad_name=name)
 
