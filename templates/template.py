@@ -36,8 +36,6 @@ for line in pypad.line_generator():
 all_lines = GET_ALL_LINES()
 
 
-
-
 %%%FIRST_ELEMENTS%%%
 """
 import pipepad
