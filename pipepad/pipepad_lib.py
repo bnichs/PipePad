@@ -29,10 +29,7 @@ def get_template_pad(language=PYTHON, **kwargs):
 
 
 def get_pad_from_user():
-
-    # with tempfile.NamedTemporaryFile(suffix=".tmp") as tf:
-    #     editor.edit(filename=tf.name, use_tty=True)
-
+    # TODO lang
     template_pad = get_template_pad()
 
     with tempfile.NamedTemporaryFile(suffix=".py") as tf:

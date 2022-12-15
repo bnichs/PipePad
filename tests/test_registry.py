@@ -12,27 +12,6 @@ TEST_DIR = tempfile.gettempdir()
 NUM_VERSIONS = 10
 
 
-# class TestPadHeader(TestCase):
-    # def test_create_header(self):
-    #     pad = get_template_pad_record()
-    #     header = pad.generate_pad_header()
-    #
-    #     print(header)
-    #
-    # def test_ensure_fields(self):
-    #     full_dict = {field: "foo" for field in PadHeader.REQUIRED_FIELDS}
-    #     header = PadHeader.from_data(full_dict)
-    #
-    #     while len(full_dict):
-    #         el = list(full_dict.keys())[0]
-    #         full_dict.pop(el)
-    #
-    #         with pytest.raises(MisssingHeaderField):
-    #             print(full_dict)
-    #             header = PadHeader.from_data(full_dict)
-    #             print(header)
-
-
 class TestRegistry():
     def setup_method(self, method):
         self.test_id = str(uuid4())
@@ -61,17 +40,17 @@ class TestRegistry():
         with pytest.raises(NoPadByThatName):
             r.get_pad("not-a-real-pad")
 
-    # def test_add_one_pad(self):
-    #     pad_name = "test-add-one"
-    #     r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
-    #     r.register_pad(pad_name, self.pad)
-    #
-    #     assert r.list_pads()
-    #     record_from_req = r.get_pad(pad_name)
-    #     pad_from_reg = record_from_req.pad
-    #     assert pad_from_reg
-    #     assert pad_from_reg == self.pad
-    #     assert pad_from_reg.get_hash() == self.pad.get_hash()
+    def test_add_one_pad(self):
+        pad_name = "test-add-one"
+        r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
+        r.register_pad(pad_name, self.pad)
+
+        assert r.list_pads()
+        record_from_req = r.get_pad(pad_name)
+        pad_from_reg = record_from_req.pad
+        assert pad_from_reg
+        assert pad_from_reg == self.pad
+        assert pad_from_reg.get_hash() == self.pad.get_hash()
 
     def test_get_latest(self, request, tmp_path):
         reg_name = request.node.name

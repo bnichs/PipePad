@@ -17,21 +17,6 @@ from pipepad.pad import PipePad
 logger = logging.getLogger(__name__)
 
 
-from collections import OrderedDict
-
-#
-# class UnsortableList(list):
-#     def sort(self, *args, **kwargs):
-#         pass
-#
-#
-# class UnsortableOrderedDict(OrderedDict):
-#     def items(self, *args, **kwargs):
-#         return UnsortableList(OrderedDict.items(self, *args, **kwargs))
-#
-#
-# yaml.add_representer(UnsortableOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
-
 class MisssingHeaderField(Exception):
     pass
 
@@ -116,16 +101,6 @@ class PadHeader(object):
         remaining = lang.get_contents(txt=contents, end_of_header=end_of_header)
 
         return header, remaining
-
-        # print(header_str)
-        # raise
-
-        # Now, scan for the next newline after our comment block
-        start_of_content = contents.find("\n", end_loc) + 1
-        start_of_content = contents.find("\n", start_of_content) + 1
-
-        remaining = contents[start_of_content:]
-        return PadHeader.from_string(header_str), remaining
 
     @classmethod
     def from_string(cls, header_str: str) -> "PadHeader":
@@ -278,10 +253,3 @@ class PadRecord(object):
             fil_txt = f.read()
 
             return fil_txt != txt
-
-
-    # def __repr__(self):
-    #     return f"PadRecord(pad_name={self.pad_name}, " \
-    #            f"pad_hash={self.pad.hash}, " \
-    #            f"date_added={self.date_added}, " \
-    #            f"pad_contents={self.pad.short_contents})"

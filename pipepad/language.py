@@ -30,15 +30,6 @@ class PadLanguage(object):
         else:
             raise UnknownLanguage(s)
 
-    # @abstractmethod
-    # def get_contents(self, txt: str, end_of_header: int):
-    #     """
-    #     :param txt: The full text of a pad file
-    #     :param end_of_header: THe index of where we know the header ends
-    #     :return:
-    #     """
-    #     pass
-
     def get_contents(self, txt: str, end_of_header: int):
         """
         :param txt: The full text of a pad file
