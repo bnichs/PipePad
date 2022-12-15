@@ -15,6 +15,9 @@ class PadLanguage(object):
     name: str
     extension: str
 
+    def __hash__(self):
+        return hash((self.name, self.extension))
+
     @abstractmethod
     def comment_block(self, txt: str):
         raise

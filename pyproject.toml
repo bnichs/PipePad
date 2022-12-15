@@ -8,6 +8,7 @@ authors = ["Ben <mail@ben-nichols.net>"]
 python = "^3.10"
 pytest-coverage = "^0.0"
 PyYAML = "^6.0"
+click = "^8.1.3"
 
 [tool.poetry.dev-dependencies]
 
@@ -19,6 +20,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 ppad = "pipepad.pipepad_lib:main"
 pipepad = "pipepad.pipepad_lib:main"
+pad = "pipepad.cli:cli"
 
 
 [tool.pytest.ini_options]
