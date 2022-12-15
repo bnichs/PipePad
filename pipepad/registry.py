@@ -162,3 +162,27 @@ class PadRegistry:
         logger.debug("Found pads %s", pads_in_dir)
 
         raise
+
+
+
+class PadRepo():
+    # a single source of pads
+    pass
+
+
+class RemotePadRepo():
+    pass
+
+
+class LocalPadRepo():
+    pass
+
+
+class LocalPadRegistry(PadRegistry):
+    #  a source of many repos
+    pass
+
+
+class RemotePadRegistry(PadRegistry):
+    # Needed?
+    pass
