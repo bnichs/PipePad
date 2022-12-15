@@ -1,6 +1,6 @@
 
 
-from pipepad.user_lib import (
+from pipepad.languages.python import (
     line_generator,
     register,
     save,

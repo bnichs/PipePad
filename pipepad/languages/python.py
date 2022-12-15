@@ -39,5 +39,5 @@ def register(name: str, repo: str=DEFAULT_REPO):
     pass
 
 
-def save():
+def save(fname: str):
     pass
