@@ -1,8 +1,22 @@
 import hashlib
+import logging
 from dataclasses import dataclass
 
 from pipepad.config_old import SHORT_HASH_LENGTH
 from pipepad.language import PadLanguage
+
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class PadID:
+
+    @classmethod
+    def from_str(cls, s: str):
+        logger.debug("Making PadID from %s", s)
+        pass
+
 
 
 @dataclass

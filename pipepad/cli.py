@@ -4,6 +4,7 @@ import click
 
 from pipepad.config_old import APP_NAME
 from pipepad.language import PYTHON, PadLanguage, ALL_LANGUAGES
+from pipepad.pad import PadID
 from pipepad.pipepad_lib import PadMaker, PadProcessor
 from pipepad.util import detect_stdin
 
