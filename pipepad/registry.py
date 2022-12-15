@@ -89,10 +89,15 @@ class PadRegistry:
         latest_pad_path = self.get_latest_pad_path(pad_record.pad_name)
         logger.debug("Latest is at %s", pad_path)
 
-        if not overwrite_latest:
-            raise
 
         logger.debug("Linking %s to %s", latest_pad_path, pad_path)
+        if os.path.exists(latest_pad_path):
+            pointing_to = os.path.realpath(latest_pad_path)
+            logger.debug("Latest pad already exists at %s pointing to %s. Overwriting...", latest_pad_path, pointing_to)
+
+            if not overwrite_latest:
+                raise
+            os.remove(latest_pad_path)
         os.symlink(pad_path, latest_pad_path)
 
     def register_pad(self, name: str, pad: PipePad, makedirs=True):
