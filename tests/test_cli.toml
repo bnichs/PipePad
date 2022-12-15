@@ -1,0 +1,26 @@
+[[command]]
+name = "help"
+command = ["pad", "--help"]
+timeout = 3
+print_output = true
+
+[[command]]
+name = "sums_nums"
+command = ["bash", "-c", "echo 1 2 3 55 | pad run file://./samples/sum_ints.pad.py"]
+timeout = 3
+print_output = true
+stderr_contains = "Starting with stdin=True"
+stdout_contains = "61"
+
+
+[[command]]
+name = "foo"
+command = ["pad"]
+timeout = 3
+print_output = true
+
+#[[command]]
+#name = "help"
+#command = ["pad", "--help"]
+#timeout = 3
+#print_output = true
