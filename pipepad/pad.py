@@ -1,7 +1,7 @@
 import hashlib
 from dataclasses import dataclass
 
-from pipepad.config import SHORT_HASH_LENGTH
+from pipepad.config_old import SHORT_HASH_LENGTH
 from pipepad.language import PadLanguage
 
 

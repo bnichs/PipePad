@@ -7,7 +7,7 @@ from os import PathLike
 from pathlib import Path
 from typing import List
 
-from pipepad.config import LATEST_PAD_NAME
+from pipepad.config_old import LATEST_PAD_NAME
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord
 

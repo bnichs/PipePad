@@ -5,7 +5,7 @@ Updates everything in the template folder and makes sure the headers and hashes 
 import logging
 import os
 
-from pipepad.config import TEMPLATE_DIR
+from pipepad.config_old import TEMPLATE_DIR
 from pipepad.record import PadRecord
 
 

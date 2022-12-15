@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TextIO
 
-from pipepad.config import APP_NAME, PY_TEMPLATE_PATH, RUN_PAD_PATH
+from pipepad.config_old import APP_NAME, PY_TEMPLATE_PATH, RUN_PAD_PATH
 from pipepad.language import PYTHON, PadLanguage
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord

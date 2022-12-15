@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import pytest
 
-from pipepad.config import HEADER_START_STRING, HEADER_END_STRING
+from pipepad.config_old import HEADER_START_STRING, HEADER_END_STRING
 from pipepad.language import PythonLanguage, PYTHON, PLAINTEXT, ALL_LANGUAGES
 from pipepad.pad import PipePad
 from pipepad.pipepad_lib import get_template_pad_record

@@ -9,7 +9,7 @@ from typing import Any, Tuple, Dict
 
 import yaml
 
-from pipepad.config import PAD_EXTENSION, HEADER_START_STRING, HEADER_END_STRING, HEADER_VERSION_KEY, HEADER_DATE_KEY, \
+from pipepad.config_old import PAD_EXTENSION, HEADER_START_STRING, HEADER_END_STRING, HEADER_VERSION_KEY, HEADER_DATE_KEY, \
     HEADER_NAME_KEY, HEADER_LANG_KEY, HEADER_HASH_KEY
 from pipepad.language import PadLanguage, PythonLanguage
 from pipepad.pad import PipePad

@@ -1,7 +1,7 @@
 import os
 import sys
 
-from pipepad.config import TEMPLATE_FILE, PAD_EXTENSION, TEMPLATE_DIR
+from pipepad.config_old import TEMPLATE_FILE, PAD_EXTENSION, TEMPLATE_DIR
 from pipepad.language import PadLanguage
 
 
