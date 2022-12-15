@@ -8,20 +8,22 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TextIO
 
-from pipepad.config import APP_NAME, TEMPLATE_PATH, RUN_PAD_PATH
+from pipepad.config import APP_NAME, PY_TEMPLATE_PATH, RUN_PAD_PATH
+from pipepad.language import PYTHON
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord
+from pipepad.util import get_template_path
 
 logger = logging.getLogger()
 
 
-def get_template_pad_record():
-    pad_record = PadRecord.load_from_file(TEMPLATE_PATH)
+def get_template_pad_record(language=PYTHON, **kwargs):
+    pad_record = PadRecord.load_from_file(get_template_path(language=language), **kwargs)
     return pad_record
 
 
-def get_template_pad():
-    pad_record = PadRecord.load_from_file(TEMPLATE_PATH)
+def get_template_pad(language=PYTHON, **kwargs):
+    pad_record = get_template_pad_record(language=language, **kwargs)
     template_pad = pad_record.pad
     return template_pad
 

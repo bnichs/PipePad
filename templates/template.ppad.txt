@@ -1,0 +1,10 @@
+START_HEADER
+pipepad-version: v1
+name: main-template
+date: 2022-12-11 11:17:23.624458
+hash: 9867ed0409bdf65b1cb7421d9c4cdb7a913e1eb1986fbdbe2e7d5e73eea34466
+language: plaintext
+END_HEADER
+hello
+
+world

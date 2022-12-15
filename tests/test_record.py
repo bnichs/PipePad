@@ -1,9 +1,14 @@
 import os
 from unittest import TestCase
 
-from pipepad.language import PythonLanguage, PYTHON
+import pytest
+
+from pipepad.config import HEADER_START_STRING, HEADER_END_STRING
+from pipepad.language import PythonLanguage, PYTHON, PLAINTEXT, ALL_LANGUAGES
 from pipepad.pad import PipePad
-from pipepad.record import PadRecord
+from pipepad.pipepad_lib import get_template_pad_record
+from pipepad.record import PadRecord, PadHeader, MisssingHeaderField
+from pipepad.util import get_template_path
 from tests.util import dummy_str
 
 
@@ -12,7 +17,7 @@ class TestRecord():
         self.id = dummy_str()
         self.pad = PipePad(contents=self.id, language=PYTHON)
 
-    def test_save_load_identical(self, tmp_path):
+    def test_save_load_identical_py(self, tmp_path):
         record = PadRecord(f"test-pad-{self.id}", pad=self.pad)
 
         out_path = record.save_to_file(save_dir=tmp_path)

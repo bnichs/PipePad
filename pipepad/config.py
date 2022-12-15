@@ -10,8 +10,9 @@ PACKAGE_DIR = os.path.dirname(MODULE_DIR)
 TEMPLATE_DIR = os.path.join(PACKAGE_DIR, "templates")
 
 # TODO for python only
-TEMPLATE_FILE = "template.py"
-TEMPLATE_PATH = os.path.join(TEMPLATE_DIR, TEMPLATE_FILE)
+TEMPLATE_FILE = "template"
+TEMPLATE_FILE_PY = "template.ppad.py"
+PY_TEMPLATE_PATH = os.path.join(TEMPLATE_DIR, TEMPLATE_FILE_PY)
 
 BIN_PATH = os.path.join(PACKAGE_DIR, "bin")
 
