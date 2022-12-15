@@ -4,7 +4,7 @@ import click
 
 from pipepad.config_old import APP_NAME
 from pipepad.language import PYTHON, PadLanguage, ALL_LANGUAGES
-from pipepad.pipepad_lib import PadMaker
+from pipepad.pipepad_lib import PadMaker, PadProcessor
 from pipepad.util import detect_stdin
 
 
@@ -52,6 +52,19 @@ def create_pad(language: str):
     maker.run()
 
 
+### Run
+@cli.command(name="run", help="Run pads")
+@click.argument("PAD_ID", type=str, required=True)
+def run_pad(pad_id: str):
+    logger.debug("Trying to run %s", pad_id)
+
+    # TODO handle stdin or not
+
+    pad_id = PadID.from_str(pad_id)
+    pad = ...  # Get from registry
+
+    proc = PadProcessor()
+    proc.process_pad(pad, fifo=...)
 
 
 ### List
