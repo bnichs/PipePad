@@ -3,3 +3,6 @@
 __pycache__
 *.iml
 var
+
+# Ignore dynaconf secret files
+.secrets.*
