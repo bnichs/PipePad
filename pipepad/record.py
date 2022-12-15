@@ -93,6 +93,7 @@ class PadHeader(object):
 
     @classmethod
     def extract_header(cls, contents: str) -> Tuple["PadHeader", str]:
+        """Split the header from the contents using language specific traits"""
         start_loc = contents.find(HEADER_START_STRING)
         if start_loc == -1:
             raise NoHeaderFound()
@@ -102,6 +103,22 @@ class PadHeader(object):
         if end_loc == -1:
             raise NoHeaderFound()
         header_str = contents[start_loc:end_loc]
+        header = PadHeader.from_string(header_str)
+
+        lang = header.get_language()
+        if not lang:
+            raise
+
+        # The end of what the header is responsible for,
+        # now the language decides where content starts
+        end_of_header = end_loc + len(HEADER_END_STRING)
+
+        remaining = lang.get_contents(txt=contents, end_of_header=end_of_header)
+
+        return header, remaining
+
+        # print(header_str)
+        # raise
 
         # Now, scan for the next newline after our comment block
         start_of_content = contents.find("\n", end_loc) + 1
@@ -199,11 +216,18 @@ class PadRecord(object):
 
             header, contents = PadHeader.extract_header(contents)
 
+            # TODO this isnt great but it'll have to do for now to find bad extractions
+            if HEADER_START_STRING in contents or HEADER_END_STRING in contents:
+                print(contents)
+                raise
+
             dt = header.get_date()
             lang = header.get_language()
             name = header.get_name()
             header_hash = header.get_hash()
             pad = PipePad(contents=contents, language=lang)
+
+            logger.debug("Loaded contents from file: %s", repr(pad.contents))
             pad_hash = pad.get_hash()
 
             if header_hash != pad_hash:
@@ -241,6 +265,8 @@ class PadRecord(object):
             txt = self.get_full_text()
             f.write(txt)
         logger.debug("Saved pad %s to %s", self.pad_name, fpath)
+
+        logger.debug("Saved to file: %s", repr(self.pad.contents))
 
         return fpath
 

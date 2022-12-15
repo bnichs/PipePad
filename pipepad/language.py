@@ -1,5 +1,9 @@
+import logging
 from abc import abstractmethod
 from dataclasses import dataclass
+
+
+logger = logging.getLogger(__name__)
 
 
 class UnknownLanguage(Exception):
@@ -26,6 +30,24 @@ class PadLanguage(object):
         else:
             raise UnknownLanguage(s)
 
+    # @abstractmethod
+    # def get_contents(self, txt: str, end_of_header: int):
+    #     """
+    #     :param txt: The full text of a pad file
+    #     :param end_of_header: THe index of where we know the header ends
+    #     :return:
+    #     """
+    #     pass
+
+    def get_contents(self, txt: str, end_of_header: int):
+        """
+        :param txt: The full text of a pad file
+        :param end_of_header: THe index of where we know the header ends
+        :return:
+        """
+        logger.debug("Extracting contents for %s", self)
+        start_of_content = txt.find("\n", end_of_header) + 1
+        return txt[start_of_content:]
 
 
 class PythonLanguage(PadLanguage):
