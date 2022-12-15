@@ -55,7 +55,6 @@ pad list versions PAD_ID
 #### Edit
 ```shell
 pad edit PAD_ID
-
 ```
 
 #### Add
