@@ -7,6 +7,7 @@ from os import PathLike
 from pathlib import Path
 from typing import List
 
+from pipepad.config import LATEST_PAD_NAME
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord
 
@@ -56,6 +57,9 @@ class PadRegistry:
         pad_dir = os.path.join(self.storage_path, pad_name)
         return Path(pad_dir)
 
+    def get_latest_pad_path(self, pad_name: str):
+        return os.path.join(self.get_pad_dir(pad_name), LATEST_PAD_NAME)
+
     def get_pad_path(self, pad_record: PadRecord, get_generic=False) -> PathLike:
         """
 
@@ -82,7 +86,7 @@ class PadRegistry:
         """Link the latest pad to pad_path."""
         logger.debug("Setting up latest pad to be %s", pad_path)
 
-        latest_pad_path = self.get_pad_path(pad_record, get_generic=True)
+        latest_pad_path = self.get_latest_pad_path(pad_record.pad_name)
         logger.debug("Latest is at %s", pad_path)
 
         if not overwrite_latest:
@@ -125,13 +129,25 @@ class PadRegistry:
         pads = os.listdir(pad_dir)
         return pads
 
-    def get_latest(self, pad_name: str):
+    def get_latest(self, pad_name: str) -> PadRecord:
         logger.debug("Getting latest pad with name %s", pad_name)
 
-        pad_path = self.get_pad_path(pad_name, get_generic=False)
+        pad_path = self.get_latest_pad_path(pad_name)
+
+        print(pad_path)
+        try:
+            record = PadRecord.load_from_file(pad_path)
+        except FileNotFoundError as e:
+            logger.error(e)
+            raise NoPadByThatName(pad_name)
+        print(record)
+
+        return record
+
+        raise
         pass
 
-    def get_pad(self, pad_name: str, version=LATEST) -> PipePad:
+    def get_pad(self, pad_name: str, version=LATEST) -> PadRecord:
         logger.debug("Getting pad with name %s", pad_name)
 
         if version == LATEST:

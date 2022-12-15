@@ -40,3 +40,6 @@ HEADER_HASH_KEY = "hash"
 
 # How many characters for a short hash
 SHORT_HASH_LENGTH = 8
+
+
+LATEST_PAD_NAME = "latest"
