@@ -7,7 +7,7 @@ MODULE_DIR = os.path.dirname(os.path.realpath(__file__))
 PACKAGE_DIR = os.path.dirname(MODULE_DIR)
 
 
-TEMPLATE_DIR = os.path.join(PACKAGE_DIR, "templates")
+TEMPLATE_DIR = os.path.join(PACKAGE_DIR, "pipepad", "templates")
 
 TEMPLATE_FILE = "template"
 
