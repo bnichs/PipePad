@@ -120,6 +120,3 @@ class PadMaker:
             proc = PadProcessor()
             proc.process_pad(pad, fifo=stdin_proc.fifo)
             stdin_thread.join()
-
-
-

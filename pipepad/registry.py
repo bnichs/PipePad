@@ -89,7 +89,6 @@ class PadRegistry:
         latest_pad_path = self.get_latest_pad_path(pad_record.pad_name)
         logger.debug("Latest is at %s", pad_path)
 
-
         logger.debug("Linking %s to %s", latest_pad_path, pad_path)
         if os.path.exists(latest_pad_path):
             pointing_to = os.path.realpath(latest_pad_path)
@@ -145,8 +144,6 @@ class PadRegistry:
         except FileNotFoundError as e:
             logger.error(e)
             raise NoPadByThatName(pad_name)
-        print(record)
-
         return record
 
     def get_pad(self, pad_name: str, version=LATEST) -> PadRecord:
