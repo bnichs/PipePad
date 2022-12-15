@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import TextIO
 
 from pipepad.config import APP_NAME, PY_TEMPLATE_PATH, RUN_PAD_PATH
-from pipepad.language import PYTHON
+from pipepad.language import PYTHON, PadLanguage
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord
 from pipepad.util import get_template_path
@@ -28,36 +28,8 @@ def get_template_pad(language=PYTHON, **kwargs):
     return template_pad
 
 
-def get_pad_from_user():
-    # TODO lang
-    template_pad = get_template_pad()
-
-    with tempfile.NamedTemporaryFile(suffix=".py") as tf:
-        logger.debug("Using tempfile %s", tf.name)
-        tf.write(template_pad.contents.encode("utf-8"))
-        tf.flush()
-
-        # https://stackoverflow.com/questions/25496295/running-vi-from-python-script
-        os.system('vim' + ' "' + tf.name + '" </dev/tty >/dev/tty 2>&1')
-
-        tf.seek(0)
-
-        print("File writen:")
-        pad_contents = tf.read()
-
-        user_pad = PipePad(pad_contents.decode("utf-8"))
-        # return
-        # log_stty()
-        # run_editor(tf)
-        # log_stty()
-        logger.debug("Editor saved file %s", tf.name)
-
-        return user_pad
-
-
-
-
 class PadProcessor:
+    """Used to run a pad against stdin using whatever language the pad is in"""
     def run_cmd(self):
         pass
 
@@ -77,14 +49,10 @@ class StdinProcessor:
     stdin: TextIO
     fifo: str
     """
-    Used to process lines in the backgroundby pushing them onto a fifo
+    Used to process lines in the background by pushing them onto a fifo
     """
 
     def start(self):
-        # logger.debug("fooo")
-        # path = "test.fifo"
-        # os.remove(path)
-        # logger.debug("removed")
         os.mkfifo(self.fifo, mode=0o600)
         logger.debug("Made fifo at %s", self.fifo)
 
@@ -101,30 +69,57 @@ def gen_run_id():
     return f"{APP_NAME}.{datetime.now().isoformat()}"
 
 
-def main():
-    run_id = gen_run_id()
-    logger.debug("Running %s", run_id)
+@dataclass
+class PadMaker:
+    """Used to make pads before they are executed"""
+    process_stdin: bool
+    language: PadLanguage
 
-    fifo_name = f".{run_id}.fifo"
-    atexit.register(lambda: os.remove(fifo_name))
+    def __post_init__(self):
+        logger.debug("Making pad with %s", self)
 
-    # Start processing stdin
-    stdin_proc = StdinProcessor(sys.stdin, fifo=fifo_name)
-    stdin_thread = threading.Thread(target=stdin_proc.start, name="stdin_thread")
-    stdin_thread.start()
+    def get_pad_from_user(self):
+        # TODO lang
+        template_pad = get_template_pad(language=self.language)
 
-    # Now get code from user
-    pad = get_pad_from_user()
+        with tempfile.NamedTemporaryFile(suffix=self.language.extension) as tf:
+            logger.debug("Using tempfile %s", tf.name)
+            tf.write(template_pad.contents.encode("utf-8"))
+            tf.flush()
+
+            # https://stackoverflow.com/questions/25496295/running-vi-from-python-script
+            os.system('vim' + ' "' + tf.name + '" </dev/tty >/dev/tty 2>&1')
+
+            tf.seek(0)
+
+            print("File writen:")
+            pad_contents = tf.read()
+
+            user_pad = PipePad(pad_contents.decode("utf-8"), language=self.language)
+            logger.debug("Editor saved file %s", tf.name)
+
+            return user_pad
+
+    def run(self):
+        run_id = gen_run_id()
+        logger.debug("Running %s", run_id)
+
+        if self.process_stdin:
+            fifo_name = f".{run_id}.fifo"
+            atexit.register(lambda: os.remove(fifo_name))
+
+            # Start processing stdin
+            stdin_proc = StdinProcessor(sys.stdin, fifo=fifo_name)
+            stdin_thread = threading.Thread(target=stdin_proc.start, name="stdin_thread")
+            stdin_thread.start()
+
+        # Now get code from user
+        pad = self.get_pad_from_user()
+
+        if self.process_stdin:
+            proc = PadProcessor()
+            proc.process_pad(pad, fifo=stdin_proc.fifo)
+            stdin_thread.join()
 
 
-    proc = PadProcessor()
-    proc.process_pad(pad, fifo=stdin_proc.fifo)
 
-
-    # Should read this in another thread and pass it to the pad when ready
-    # print("From stdin")
-    # for el in sys.stdin:
-    #     print(el)
-
-if __name__ == "__main__":
-    main()
