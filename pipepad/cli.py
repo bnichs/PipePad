@@ -21,6 +21,7 @@ def get_default_language():
 
 @click.group(invoke_without_command=True )
 @click.option("-l", "--language", type=str, default=get_default_language().name)
+@click.option("-c", "--config-file", type=str, default=...)
 @click.option('--debug/--no-debug', default=False)
 def cli(language: PadLanguage, debug: bool):
     has_stdin = detect_stdin()
