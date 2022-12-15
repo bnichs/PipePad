@@ -5,7 +5,7 @@ description = ""
 authors = ["Ben <mail@ben-nichols.net>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 pytest-coverage = "^0.0"
 PyYAML = "^6.0"
 click = "^8.1.3"
