@@ -1,0 +1,15 @@
+[pipepad]
+# Language used for all new pads unless specified otherwise
+default_language = "python"
+foo = "bar"
+
+
+[[registry]]
+name = "local"
+path = "foo/bar"
+
+
+[[registry]]
+name = "pad-registry"
+url = "git://foo/bar"
+
