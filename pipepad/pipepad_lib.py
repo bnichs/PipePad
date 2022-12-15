@@ -113,7 +113,6 @@ def main():
     stdin_thread = threading.Thread(target=stdin_proc.start, name="stdin_thread")
     stdin_thread.start()
 
-
     # Now get code from user
     pad = get_pad_from_user()
 

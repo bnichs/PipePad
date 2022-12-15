@@ -149,9 +149,6 @@ class PadRegistry:
 
         return record
 
-        raise
-        pass
-
     def get_pad(self, pad_name: str, version=LATEST) -> PadRecord:
         logger.debug("Getting pad with name %s", pad_name)
 
