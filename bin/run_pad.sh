@@ -18,4 +18,11 @@ export PYTHONPATH=$PYPATH:$CURDIR
 export PIPEPAD_FIFO=$FIFO
 export PIPEPAD_CUR_PATH=$PAD
 
-python "$PAD"
+echo $PIPEPAD_PAD_LANG
+
+if [ "$PIPEPAD_PAD_LANG" = "plaintext" ]; then
+  echo
+
+elif [ "$PIPEPAD_PAD_LANG" = "python" ]; then
+  python "$PAD"
+fi

@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TextIO
 
+from pipepad.config import settings
 from pipepad.config_old import APP_NAME, PY_TEMPLATE_PATH, RUN_PAD_PATH
 from pipepad.language import PYTHON, PadLanguage
 from pipepad.pad import PipePad
@@ -39,6 +40,7 @@ class PadProcessor:
             tf.write(pad.contents.encode("utf-8"))
             tf.flush()
 
+            os.environ[settings.pipepad.env_vars.pad_lang] = pad.language.name
             os.system(f"{RUN_PAD_PATH} {tf.name} {fifo} '{sys.path}'")
 
         logger.debug("Done running pad")

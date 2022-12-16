@@ -5,6 +5,7 @@ default_language = "python"
 [pipepad.env_vars]
 fifo = "PIPEPAD_FIFO"
 cur_path = "PIPEPAD_CUR_PATH"
+pad_lang = "PIPEPAD_PAD_LANG"
 
 
 [[registry]]

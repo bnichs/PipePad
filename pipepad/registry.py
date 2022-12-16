@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List
 
 from pipepad.config_old import LATEST_PAD_NAME
+from pipepad.language import PadLanguage, ALL_LANGUAGES
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord
 
