@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+from pathlib import Path
 
 from pipepad.config import settings
 from pipepad.config_old import DEFAULT_REPO
@@ -36,6 +37,12 @@ def all_lines():
 
 def process_line(line):
     pass
+
+def _get_pad_path() -> os.PathLike:
+    env_var = settings.pipepad.env_vars.cur_path
+    pad_path = os.environ[env_var]
+    return Path(pad_path)
+
 
 
 def register(name: str, repo: str=DEFAULT_REPO):
