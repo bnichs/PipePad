@@ -35,7 +35,7 @@ class PadProcessor:
         pass
 
     def process_pad(self, pad, fifo):
-        with tempfile.NamedTemporaryFile(suffix=".py") as tf:
+        with tempfile.NamedTemporaryFile(suffix=".py", delete=settings.pipepad.delete_tmp_pad) as tf:
             logger.info("Running pad %s", tf.name)
             tf.write(pad.contents.encode("utf-8"))
             tf.flush()
@@ -84,7 +84,7 @@ class PadMaker:
         # TODO lang
         template_pad = get_template_pad(language=self.language)
 
-        with tempfile.NamedTemporaryFile(suffix=f".{self.language.extension}") as tf:
+        with tempfile.NamedTemporaryFile(suffix=f".{self.language.extension}", delete=settings.pipepad.delete_tmp_pad) as tf:
             logger.debug("Using tempfile %s", tf.name)
             tf.write(template_pad.contents.encode("utf-8"))
             tf.flush()
