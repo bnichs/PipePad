@@ -6,6 +6,8 @@ from os import PathLike
 from pathlib import Path
 from typing import List, Self
 
+
+from pipepad.config import settings
 from pipepad.config_old import LATEST_PAD_NAME
 from pipepad.language import PadLanguage, ALL_LANGUAGES
 from pipepad.pad import PipePad
@@ -257,7 +259,28 @@ class LocalPadRegistry(PadRegistry):
     #  a source of many repos
     pass
 
+@dataclass
+class PadRegistry():
+    repos: List[PadRepo]
 
-class RemotePadRegistry(PadRegistry):
-    # Needed?
-    pass
+    def get_repos_by_name(self):
+        return {r.name: r for r in self.repos}
+
+    def get_repo_by_name(self, name) -> PadRepo:
+        return self.get_repos_by_name()[name]
+        pass
+
+    @classmethod
+    def from_settings(cls) -> "PadRegistry":
+        """Build a registry from the settings"""
+        repos = []
+        for repo_d in settings.repo:
+            repo = PadRepo.from_settings(repo_d)
+            repos.append(repo)
+
+        return PadRegistry(repos)
+
+    def register(self, repo_name: str, pad_name: str, pad: PipePad):
+        repo = self.get_repo_by_name(repo_name)
+        repo.register_pad(name=pad_name, pad=pad)
+        logger.debug("Registered pad at %s/%s", repo_name, pad_name)
