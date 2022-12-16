@@ -82,7 +82,7 @@ class PadMaker:
         # TODO lang
         template_pad = get_template_pad(language=self.language)
 
-        with tempfile.NamedTemporaryFile(suffix=self.language.extension) as tf:
+        with tempfile.NamedTemporaryFile(suffix=f".{self.language.extension}") as tf:
             logger.debug("Using tempfile %s", tf.name)
             tf.write(template_pad.contents.encode("utf-8"))
             tf.flush()
