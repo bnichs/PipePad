@@ -244,23 +244,15 @@ class LocalPadRepo(PadRepo):
         raise
 
 
-
-class PadRepo():
-    # a single source of pads
-    pass
-
-
 class RemotePadRepo():
     pass
 
+#
+# class LocalPadRepo():
+#     pass
+#
 
-class LocalPadRepo():
-    pass
 
-
-class LocalPadRegistry(PadRegistry):
-    #  a source of many repos
-    pass
 
 @dataclass
 class PadRegistry():

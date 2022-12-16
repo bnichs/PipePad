@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from os import PathLike
 from pathlib import Path
-from typing import Any, Tuple, Dict
+from typing import Any, Tuple, Dict, Self
 
 import yaml
 
@@ -184,7 +184,24 @@ class PadRecord(object):
         return txt
 
     @classmethod
-    def load_from_file(cls, filename, ignore_hash_mismatch=False):
+    def create_from_file(cls, filename, language: PadLanguage) -> Self:
+        pad = PipePad.create_from_file(filename, language)
+        raise
+
+        record = PadRecord()
+        logger.debug("Creating pad from file %s", filename)
+        with open(filename, 'r') as f:
+            contents = f.read()
+
+            pad = PipePad(contents=contents, language=language)
+
+
+
+
+        pass
+
+    @classmethod
+    def load_from_file(cls, filename, ignore_hash_mismatch=False) -> Self:
         logger.debug("Loading pad from file %s", filename)
         with open(filename, 'rb') as f:
             contents = f.read().decode("utf-8")
