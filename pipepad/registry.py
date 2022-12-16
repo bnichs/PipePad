@@ -159,18 +159,20 @@ class LocalPadRepo(PadRepo):
         """Link the latest pad to pad_path."""
         logger.debug("Setting up latest pad to be %s", pad_path)
 
-        latest_pad_path = self.get_latest_pad_path(pad_record.pad_name)
-        logger.debug("Latest is at %s", pad_path)
+        latest_pad_path = self.get_latest_pad_path(pad_record.pad_name, pad_record.pad.language)
+        # logger.debug("Latest is at %s", pad_path)
 
         logger.debug("Linking %s to %s", latest_pad_path, pad_path)
-        if os.path.exists(latest_pad_path):
+        print(latest_pad_path)
+        if os.path.islink(latest_pad_path):
             pointing_to = os.path.realpath(latest_pad_path)
             logger.debug("Latest pad already exists at %s pointing to %s. Overwriting...", latest_pad_path, pointing_to)
 
             if not overwrite_latest:
                 raise
             os.remove(latest_pad_path)
-        os.symlink(pad_path, latest_pad_path)
+        os.symlink(os.path.abspath(pad_path), latest_pad_path)
+        # os.symlink(latest_pad_path, pad_path)
 
     def register_pad(self, name: str, pad: PipePad, makedirs=True):
         # TODO handle dupe pad hashes
