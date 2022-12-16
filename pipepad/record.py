@@ -36,7 +36,7 @@ class PadHeader(object):
         HEADER_DATE_KEY,
         HEADER_NAME_KEY,
         HEADER_LANG_KEY,
-        HEADER_HASH_KEY
+        # HEADER_HASH_KEY
     ]
 
     def __init__(self):
@@ -129,7 +129,7 @@ class PadHeader(object):
         return self._store[HEADER_DATE_KEY]
 
     def get_hash(self) -> str:
-        return self._store[HEADER_HASH_KEY]
+        return self._store.get(HEADER_HASH_KEY, None)
 
     def get_name(self) -> str:
         return self._store[HEADER_NAME_KEY]
@@ -205,7 +205,7 @@ class PadRecord(object):
             logger.debug("Loaded contents from file: %s", repr(pad.contents))
             pad_hash = pad.get_hash()
 
-            if header_hash != pad_hash:
+            if header_hash and header_hash != pad_hash:
                 args = ("Hash mismatch, header=%s pad=%s", header_hash, pad_hash)
                 if ignore_hash_mismatch:
                     print(logger.level)

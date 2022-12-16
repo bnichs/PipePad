@@ -3,7 +3,6 @@ START_HEADER
 pipepad-version: v1
 name: main-template
 date: 2022-12-11 11:17:23.624458
-hash: 58390a8f2d1977a1d34cc83e8d1b90650acf8510d617bd7eb1dcb598d91a1d19
 language: python
 END_HEADER
 """
