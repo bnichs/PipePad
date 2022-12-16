@@ -30,7 +30,7 @@ def cli(ctx, language: PadLanguage, debug: bool):
     has_stdin = detect_stdin()
     logger.debug("Starting with stdin=%s", has_stdin)
 
-    ctx.invoke(create_pad, language=language)
+    # ctx.invoke(create_pad, language=language)
 
 
 ### Create
