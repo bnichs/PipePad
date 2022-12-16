@@ -6,6 +6,7 @@ from pipepad.config_old import APP_NAME
 from pipepad.language import PYTHON, PadLanguage, ALL_LANGUAGES
 from pipepad.pad import PadID
 from pipepad.pipepad_lib import PadMaker, PadProcessor
+from pipepad.record import PadRecord
 from pipepad.util import detect_stdin
 
 
@@ -22,12 +23,14 @@ def get_default_language():
 
 @click.group(invoke_without_command=True )
 @click.option("-l", "--language", type=str, default=get_default_language().name)
-@click.option("-c", "--config-file", type=str, default=...)
+# @click.option("-c", "--config-file", type=str, default=...)
 @click.option('--debug/--no-debug', default=False)
-def cli(language: PadLanguage, debug: bool):
+@click.pass_context
+def cli(ctx, language: PadLanguage, debug: bool):
     has_stdin = detect_stdin()
     logger.debug("Starting with stdin=%s", has_stdin)
 
+    ctx.invoke(create_pad, language=language)
 
 
 ### Create
@@ -44,7 +47,9 @@ def get_language_strings():
 
 @cli.command(name="create", help="Create a new pad")
 @click.option("-l", "--language", type=click.Choice(get_language_strings()), default=get_default_language().name)
-def create_pad(language: str):
+@click.argument("FILENAME", default=None)
+@click.option("-n", "--name", default="new-pad")
+def create_pad(language: str, filename: str, name):
     language = PadLanguage.from_string(language)
     logger.debug("Creating pad with lang=%s....", language)
 
@@ -52,7 +57,12 @@ def create_pad(language: str):
     logger.debug("Starting with stdin=%s", has_stdin)
 
     maker = PadMaker(process_stdin=has_stdin, language=language)
-    maker.run()
+    pad = maker.run()
+
+    if filename:
+        record = PadRecord(pad_name=name, pad=pad)
+        record.save_to_file(filename)
+
 
 
 ### Run
