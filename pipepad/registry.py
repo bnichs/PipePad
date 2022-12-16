@@ -9,15 +9,12 @@ from typing import List, Self
 from tabulate import tabulate
 
 from pipepad.config import settings
-from pipepad.config_old import LATEST_PAD_NAME
+from pipepad.config_old import LATEST_PAD_NAME, LATEST_VERSION
 from pipepad.language import PadLanguage, ALL_LANGUAGES
 from pipepad.pad import PipePad
 from pipepad.record import PadRecord
 
 logger = logging.getLogger(__name__)
-
-
-LATEST = -1
 
 DEFAULT_FMT = "table"
 
@@ -226,10 +223,10 @@ class LocalPadRepo(PadRepo):
             raise NoPadByThatName(pad_name)
         return record
 
-    def get_pad(self, pad_name: str, version=LATEST) -> PadRecord:
+    def get_pad(self, pad_name: str, version=LATEST_VERSION) -> PadRecord:
         logger.debug("Getting pad with name %s", pad_name)
 
-        if version == LATEST:
+        if version == LATEST_VERSION:
             return self.get_latest(pad_name)
 
 
