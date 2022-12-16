@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 
+from pipepad.config import settings
 from pipepad.config_old import DEFAULT_REPO
 
 logger = logging.getLogger(__name__)
