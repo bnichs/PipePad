@@ -5,8 +5,8 @@ import shutil
 from pipepad.config import settings
 from pipepad.config_old import DEFAULT_REPO
 
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger()
 logging.basicConfig()
 logger.setLevel(logging.DEBUG)
 
