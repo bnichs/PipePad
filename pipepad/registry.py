@@ -1,11 +1,10 @@
-import hashlib
 import logging
 import os
-from dataclasses import dataclass
-from datetime import datetime
+from abc import abstractmethod
+from dataclasses import dataclass, asdict
 from os import PathLike
 from pathlib import Path
-from typing import List
+from typing import List, Self
 
 from pipepad.config_old import LATEST_PAD_NAME
 from pipepad.language import PadLanguage, ALL_LANGUAGES
@@ -23,7 +22,66 @@ class NoPadByThatName(Exception):
 
 
 @dataclass
-class PadRegistry:
+class PadRepo():
+    name: str
+    # a single source of pads
+    @classmethod
+    def from_settings(cls, d: dict):
+        logger.debug("Making pad repo from settings")
+
+        rtype = d.get("type", None)
+
+        if not rtype:
+            return LocalPadRepo(**d)
+        elif rtype == "git":
+            raise
+            pass
+
+    def as_dict(self):
+        raise
+
+    @abstractmethod
+    def register_pad(self, name: str, pad: PipePad, **kwargs):
+        pass
+
+    @abstractmethod
+    def list_pads(self) -> List[str]:
+        pass
+
+    @abstractmethod
+    def get_latest(self, name: str) -> PipePad:
+        pass
+
+    def list_latest_pads(self) -> List[Self]:
+        pads = []
+        for pname in self.list_pads():
+            pad = self.get_latest(pname)
+            pads.append(pad)
+        return pads
+
+    def pprint(self, **kwargs):
+        print(self.pformat(**kwargs))
+
+    def pformat(self, fmt: str = DEFAULT_FMT):
+        if fmt == "table":
+            data = []
+            for pad in self.list_latest_pads():
+                d = {
+                    "name": pad
+                }
+                data.append(d)
+                pass
+            return tabulate(data, headers="keys")
+        elif fmt == "plain":
+            for pad in self.list_pads():
+                print(pad)
+
+    def get_latest_pad_name(self, language: PadLanguage) -> str:
+        return f"{LATEST_PAD_NAME}.{language.extension}"
+
+
+@dataclass
+class LocalPadRepo(PadRepo):
     """
     Used to persist pads in an easy to use format.
 
@@ -43,11 +101,13 @@ class PadRegistry:
     New pads registered which match the contents of latest will not be saved
     New pads registered will have latest pointed to them
     """
-    repo_name: str
-    storage_path: PathLike
+    path: PathLike
+
+    def as_dict(self):
+        return asdict(self)
 
     def __post_init__(self):
-        logger.debug("Setting up registry %s at %s", self.repo_name, self.storage_path)
+        logger.debug("Setting up registry %s at %s", self.name, self.path)
 
     def _load_registry(self):
         # TODO
@@ -55,11 +115,23 @@ class PadRegistry:
 
     def get_pad_dir(self, pad_name: str) -> PathLike:
         """Given a pad_name, find the directorry it should be in """
-        pad_dir = os.path.join(self.storage_path, pad_name)
+        pad_dir = os.path.join(self.path, pad_name)
         return Path(pad_dir)
 
-    def get_latest_pad_path(self, pad_name: str):
-        return os.path.join(self.get_pad_dir(pad_name), LATEST_PAD_NAME)
+
+    def get_latest_pad_path(self, pad_name: str, language: PadLanguage=None):
+        def get_fil(lang):
+            latest_name = self.get_latest_pad_name(lang)
+            return os.path.join(self.get_pad_dir(pad_name), latest_name)
+        if not language:
+            # Looks for a latest in every language
+            for lang in ALL_LANGUAGES:
+                fil = get_fil(lang)
+                if os.path.exists(fil):
+                    return fil
+            raise
+        else:
+            return get_fil(language)
 
     def get_pad_path(self, pad_record: PadRecord, get_generic=False) -> PathLike:
         """
