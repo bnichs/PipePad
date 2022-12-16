@@ -241,8 +241,6 @@ class PadRecord(object):
             f.write(txt)
         logger.debug("Saved pad %s to %s", self.pad_name, fpath)
 
-        logger.debug("Saved to file: %s", repr(self.pad.contents))
-
         return fpath
 
     def differs_from_file(self, fpath: PathLike):

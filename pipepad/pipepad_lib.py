@@ -100,7 +100,7 @@ class PadMaker:
 
             return user_pad
 
-    def run(self):
+    def run(self) -> PipePad:
         run_id = gen_run_id()
         logger.debug("Running %s", run_id)
 
