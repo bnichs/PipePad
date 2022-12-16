@@ -9,12 +9,18 @@ cur_path = "PIPEPAD_CUR_PATH"
 pad_lang = "PIPEPAD_PAD_LANG"
 
 
-[[registry]]
-name = "local"
-path = "foo/bar"
+[[repo]]
+name = "samples"
+path = "./samples/sample_repo"
 
 
-[[registry]]
-name = "pad-registry"
-url = "git://foo/bar"
+[[repo]]
+name = "samples3"
+path = "./samples/sample_repo4"
 
+
+#[[repo]]
+#type = "git"
+#name = "pad-registry"
+#url = "git://foo/bar"
+#
