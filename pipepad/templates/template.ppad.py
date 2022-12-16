@@ -38,17 +38,17 @@ all_lines = GET_ALL_LINES()
 """
 import pipepad
 
-
+#
 for line in pipepad.line_generator():
     tot = sum(int(i) for i in line.split())
     print(tot)
-
-
-for line in pipepad.all_lines():
-    for el in line.split(" "):
-        print(el)
-    pass
-
+#
+#
+# for line in pipepad.all_lines():
+#     for el in line.split(" "):
+#         print(el)
+#     pass
+#
 
 
 # There are two ways to save a pipepad:
