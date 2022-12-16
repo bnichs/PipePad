@@ -49,3 +49,14 @@ class PipePad:
     @property
     def extension(self):
         return self.language.extension
+
+    @classmethod
+    def create_from_file(cls, filename, language: PadLanguage) -> Self:
+        logger.debug("Creating pad from file %s", filename)
+        with open(filename, 'r') as f:
+            contents = f.read()
+
+            pad = PipePad(contents=contents, language=language)
+            return pad
+
+
