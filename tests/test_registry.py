@@ -5,7 +5,7 @@ from uuid import uuid4
 
 import pytest
 
-from pipepad.registry import PadRegistry, NoPadByThatName
+from pipepad.registry import LocalPadRepo, NoPadByThatName
 from tests.util import get_test_pad, dummy_str
 
 TEST_DIR = tempfile.gettempdir()
@@ -20,15 +20,15 @@ class TestRegistry():
         self.pad = get_test_pad()
 
     def test_create_registry(self):
-        r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
+        r = LocalPadRepo("test-reg", path=Path(self.test_dir))
 
     def test_list_no_pads(self):
-        r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
+        r = LocalPadRepo("test-reg", path=Path(self.test_dir))
         assert r.list_pads() == []
 
     def test_list_pads_type_correct(self, request):
         pad_name = request.node.name
-        r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
+        r = LocalPadRepo("test-reg", path=Path(self.test_dir))
         r.register_pad(pad_name, self.pad)
 
         pads = r.list_pads()
@@ -36,13 +36,13 @@ class TestRegistry():
             assert isinstance(pad, str)
 
     def test_get_no_pads(self):
-        r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
+        r = LocalPadRepo("test-reg", path=Path(self.test_dir))
         with pytest.raises(NoPadByThatName):
             r.get_pad("not-a-real-pad")
 
     def test_add_one_pad(self):
         pad_name = "test-add-one"
-        r = PadRegistry("test-reg", storage_path=Path(self.test_dir))
+        r = LocalPadRepo("test-reg", path=Path(self.test_dir))
         r.register_pad(pad_name, self.pad)
 
         assert r.list_pads()
@@ -54,7 +54,7 @@ class TestRegistry():
 
     def test_get_latest(self, request, tmp_path):
         reg_name = request.node.name
-        r = PadRegistry(reg_name, storage_path=tmp_path)
+        r = LocalPadRepo(reg_name, path=tmp_path)
 
         pad, pad_name = get_test_pad(), "pad"
 
@@ -66,7 +66,7 @@ class TestRegistry():
 
     def test_multiple_puts(self, request, tmp_path):
         reg_name = request.node.name
-        r = PadRegistry(reg_name, storage_path=tmp_path)
+        r = LocalPadRepo(reg_name, path=tmp_path)
 
         pad1, pad1_name = get_test_pad(), "pad1"
         pad2, pad2_name = get_test_pad(), "pad2"
