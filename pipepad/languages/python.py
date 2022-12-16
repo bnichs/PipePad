@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 
 from pipepad.config_old import DEFAULT_REPO
 
@@ -40,4 +41,7 @@ def register(name: str, repo: str=DEFAULT_REPO):
 
 
 def save(fname: str):
-    pass
+    pad_path = _get_pad_path()
+
+    shutil.copy(pad_path, fname)
+    logger.info("Saved pad to %s", fname)

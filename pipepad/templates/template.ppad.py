@@ -59,4 +59,4 @@ pipepad.register(repo="local", name="sum_ints")
 
 
 ## The second is by saving it to a file of your choice
-pipepad.save()
+pipepad.save("foo.pad.py")

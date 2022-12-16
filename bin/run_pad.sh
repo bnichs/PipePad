@@ -16,4 +16,6 @@ export PYTHONPATH=$PYPATH:$CURDIR
 
 
 export PIPEPAD_FIFO=$FIFO
+export PIPEPAD_CUR_PATH=$PAD
+
 python "$PAD"

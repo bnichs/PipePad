@@ -1,7 +1,10 @@
 [pipepad]
 # Language used for all new pads unless specified otherwise
 default_language = "python"
-foo = "bar"
+
+[pipepad.env_vars]
+fifo = "PIPEPAD_FIFO"
+cur_path = "PIPEPAD_CUR_PATH"
 
 
 [[registry]]
