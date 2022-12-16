@@ -5,6 +5,10 @@ from pathlib import Path
 
 from pipepad.config import settings
 from pipepad.config_old import DEFAULT_REPO
+from pipepad.language import PadLanguage
+from pipepad.pad import PipePad
+from pipepad.record import PadRecord
+from pipepad.registry import PadRegistry
 
 
 logger = logging.getLogger()
@@ -44,9 +48,17 @@ def _get_pad_path() -> os.PathLike:
     return Path(pad_path)
 
 
+def _get_pad_language():
+    env_var = settings.pipepad.env_vars.pad_lang
+    return PadLanguage.from_string(os.environ[env_var])
+
 
 def register(name: str, repo: str=DEFAULT_REPO):
-    pass
+    reg = PadRegistry.from_settings()
+
+    pad_path = _get_pad_path()
+    pad = PipePad.create_from_file(pad_path, language=_get_pad_language())
+    reg.register(repo_name=repo, pad_name=name, pad=pad)
 
 
 def save(fname: str):

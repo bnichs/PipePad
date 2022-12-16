@@ -54,7 +54,7 @@ for line in pipepad.all_lines():
 # There are two ways to save a pipepad:
 
 ## First is by registering it.
-pipepad.register(repo="local", name="sum_ints")
+pipepad.register(repo="samples", name="sum_ints")
 
 
 ## The second is by saving it to a file of your choice
