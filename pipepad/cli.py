@@ -48,9 +48,9 @@ def get_language_strings():
 
 @cli.command(name="create", help="Create a new pad")
 @click.option("-l", "--language", type=click.Choice(get_language_strings()), default=get_default_language().name)
-@click.argument("FILENAME", default=None)
+@click.argument("PAD_ID", default=None, required=False)
 @click.option("-n", "--name", default="new-pad")
-def create_pad(language: str, filename: str, name):
+def create_pad(language: str, pad_id: str, name):
     language = PadLanguage.from_string(language)
     logger.debug("Creating pad with lang=%s....", language)
 
@@ -60,9 +60,14 @@ def create_pad(language: str, filename: str, name):
     maker = PadMaker(process_stdin=has_stdin, language=language)
     pad = maker.run()
 
-    if filename:
+    pad_id = PadID.from_str(pad_id)
+    if pad_id.is_file():
+        filename = pad_id.get_filename()
+
         record = PadRecord(pad_name=name, pad=pad)
         record.save_to_file(filename)
+    elif pad_id.is_foo():
+        pass
 
 
 
