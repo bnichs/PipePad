@@ -6,6 +6,7 @@ from os import PathLike
 from pathlib import Path
 from typing import List, Self
 
+from tabulate import tabulate
 
 from pipepad.config import settings
 from pipepad.config_old import LATEST_PAD_NAME
@@ -18,9 +19,12 @@ logger = logging.getLogger(__name__)
 
 LATEST = -1
 
+DEFAULT_FMT = "table"
+
 
 class NoPadByThatName(Exception):
     pass
+
 
 
 @dataclass
@@ -198,8 +202,7 @@ class LocalPadRepo(PadRepo):
     def list_pads(self) -> List[str]:
         # TODO metadata handling, need date, latest, hashes(?)
         pads = []
-        for fil in os.listdir(self.storage_path):
-            print(fil)
+        for fil in os.listdir(self.path):
             pads.append(fil)
         return pads
 
@@ -279,6 +282,19 @@ class PadRegistry():
             repos.append(repo)
 
         return PadRegistry(repos)
+
+    def pformat(self, fmt: str=DEFAULT_FMT):
+        if fmt == "table":
+            data = [r.as_dict() for r in self.repos]
+            print(data)
+            return tabulate(data, headers="keys")
+        elif fmt == "plain":
+            return "\n".join(r.name for r in self.repos)
+        else:
+            raise
+
+    def pprint(self, **kwargs):
+        print(self.pformat(**kwargs))
 
     def register(self, repo_name: str, pad_name: str, pad: PipePad):
         repo = self.get_repo_by_name(repo_name)

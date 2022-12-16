@@ -7,6 +7,7 @@ from pipepad.language import PYTHON, PadLanguage, ALL_LANGUAGES
 from pipepad.pad import PadID
 from pipepad.pipepad_lib import PadMaker, PadProcessor
 from pipepad.record import PadRecord
+from pipepad.registry import PadRegistry, DEFAULT_FMT
 from pipepad.util import detect_stdin
 
 
@@ -88,9 +89,28 @@ def list_things():
     pass
 
 
-@list_things.command(help="List the pads")
-def list_pads():
-    pass
+@list_things.command(name="repos", help="List the repos available")
+@click.option("-f", "--format", default=DEFAULT_FMT)
+def list_repos(format: str):
+    reg = PadRegistry.from_settings()
+    reg.pprint(fmt=format)
+
+
+# @list_things.command(name="pads", help="List the pads available")
+# def list_pads(format: str):
+#     reg = PadRegistry.from_settings()
+#
+#     reg.pprint(fmt=format)
+
+
+@list_things.command(name="pads", help="List the pads")
+@click.option("-f", "--format", default=DEFAULT_FMT)
+@click.argument("repo", type=str)
+def list_pads(repo: str, format: str):
+    reg = PadRegistry.from_settings()
+    repo = reg.get_repo_by_name(repo)
+    repo.pprint(fmt=format)
+
 
 #
 # @cli.group(help="Manage repos")
