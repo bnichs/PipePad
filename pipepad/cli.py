@@ -117,6 +117,29 @@ def list_pads(repo: str, format: str):
     repo.pprint(fmt=format)
 
 
+### Show
+# @cli.group(name="show", help="Show things")
+# def show_thing():
+#     pass
+
+
+@cli.command(name="show", help="List the pads")
+@click.option("-f", "--format", default=DEFAULT_FMT)
+@click.argument("pad_id", type=str)
+def show_pad(pad_id: str, format: str, syntax_highlight=True):
+    reg = PadRegistry.from_settings()
+    pad_id = PadID.from_str(pad_id)
+
+    record = reg.get_pad_record(pad_id)
+
+    record.pprint(syntax_highlight=syntax_highlight)
+
+
+    print(record)
+
+    # print(record.pad.contents)
+
+
 #
 # @cli.group(help="Manage repos")
 # def repo():
