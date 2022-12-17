@@ -5,19 +5,53 @@ timeout = 3
 print_output = true
 
 [[command]]
-name = "sums_nums"
+name = "pad-config"
+command = ["pad", "config", "--help"]
+timeout = 3
+print_output = true
+
+# Pipe commands
+[[command]]
+name = "sums-nums-with-file"
 command = ["bash", "-c", "echo 1 2 3 55 | pad run file://./samples/sum_ints.pad.py"]
 timeout = 3
 print_output = true
 stderr_contains = "Starting with stdin=True"
 stdout_contains = "61"
 
-
 [[command]]
-name = "foo"
-command = ["pad"]
+name = "sums-nums-with-repo"
+command = ["bash", "-c", "echo 1 2 3 55 | pad run samples:sum_ints"]
 timeout = 3
 print_output = true
+stderr_contains = "Starting with stdin=True"
+stdout_contains = "61"
+
+
+# Show commands
+[[command]]
+name = "show-pad-repo-name-version"
+command = ["pad", "show", "samples:sum_ints:5"]
+timeout = 3
+print_output = true
+stdout_contains = "%%%FIRST_ELEMENTS%%%"
+
+
+[[command]]
+name = "show-pad-repo-name"
+command = ["pad", "show", "samples:sum_ints"]
+timeout = 3
+print_output = true
+stdout_contains = "%%%FIRST_ELEMENTS%%%"
+
+
+# List commands
+[[command]]
+name = "list-repos"
+command = ["pad", "list", "repos"]
+timeout = 3
+print_output = true
+stdout_contains = "samples/sample_repo"
 
 #[[command]]
 #name = "help"
