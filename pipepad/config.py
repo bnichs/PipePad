@@ -27,14 +27,14 @@ DEFAULT_SETTING_FILES = [
 # settings = get_settings()
 
 logger.debug("loading with settings files %s", DEFAULT_SETTING_FILES)
-print(DEFAULT_SETTING_FILES)
 
 settings = Dynaconf(
     envvar_prefix="DYNACONF",
     settings_files=DEFAULT_SETTING_FILES,
 )
 
-pprint(settings.as_dict())
+logger.debug("Starting with settings files %s", DEFAULT_SETTING_FILES)
+logger.debug("Starting with settings %s", settings.as_dict())
 
 
 # `envvar_prefix` = export envvars with `export DYNACONF_FOO=bar`.
