@@ -38,7 +38,7 @@ class TestRegistry():
     def test_get_no_pads(self):
         r = LocalPadRepo("test-reg", path=Path(self.test_dir))
         with pytest.raises(NoPadByThatName):
-            r.get_pad("not-a-real-pad")
+            r.get_pad_by_name("not-a-real-pad")
 
     def test_add_one_pad(self):
         pad_name = "test-add-one"
@@ -46,7 +46,7 @@ class TestRegistry():
         r.register_pad(pad_name, self.pad)
 
         assert r.list_pads()
-        record_from_req = r.get_pad(pad_name)
+        record_from_req = r.get_pad_by_name(pad_name)
         pad_from_reg = record_from_req.pad
         assert pad_from_reg
         assert pad_from_reg == self.pad

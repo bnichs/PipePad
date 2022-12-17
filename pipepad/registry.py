@@ -11,7 +11,7 @@ from tabulate import tabulate
 from pipepad.config import settings
 from pipepad.config_old import LATEST_PAD_NAME, LATEST_VERSION
 from pipepad.language import PadLanguage, ALL_LANGUAGES
-from pipepad.pad import PipePad
+from pipepad.pad import PipePad, PadID
 from pipepad.record import PadRecord
 
 logger = logging.getLogger(__name__)
@@ -55,6 +55,10 @@ class PadRepo():
     def get_latest(self, name: str) -> PipePad:
         pass
 
+    @abstractmethod
+    def get_pad_by_name(self, name: str, version: int = LATEST_VERSION) -> PipePad:
+        pass
+
     def list_latest_pads(self) -> List[Self]:
         pads = []
         for pname in self.list_pads():
@@ -81,6 +85,10 @@ class PadRepo():
 
     def get_latest_pad_name(self, language: PadLanguage) -> str:
         return f"{LATEST_PAD_NAME}.{language.extension}"
+
+    def get_pad_by_id(self, pad_id: PadID):
+        logger.debug("Getting pad %s from repo %s", pad_id, self)
+        return self.get_pad_by_name(pad_name=pad_id.pad_name, version=pad_id.version)
 
 
 @dataclass
@@ -120,7 +128,6 @@ class LocalPadRepo(PadRepo):
         """Given a pad_name, find the directorry it should be in """
         pad_dir = os.path.join(self.path, pad_name)
         return Path(pad_dir)
-
 
     def get_latest_pad_path(self, pad_name: str, language: PadLanguage=None):
         def get_fil(lang):
@@ -223,20 +230,27 @@ class LocalPadRepo(PadRepo):
             raise NoPadByThatName(pad_name)
         return record
 
-    def get_pad(self, pad_name: str, version=LATEST_VERSION) -> PadRecord:
+    # TODO unify with basse class
+    def get_pad_by_name(self, pad_name: str, version=LATEST_VERSION) -> PadRecord:
         logger.debug("Getting pad with name %s", pad_name)
 
         if version == LATEST_VERSION:
             return self.get_latest(pad_name)
 
-
         pads = self.list_pads()
         if pad_name not in pads:
             raise NoPadByThatName(pad_name)
 
-        pads_in_dir = self.list_pad_dir(pad_name)
-
+        pads_in_dir = sorted(self.list_pad_dir(pad_name))
         logger.debug("Found pads %s", pads_in_dir)
+
+        pad_version_name = pads_in_dir[version]
+        logger.debug("Version %d is %s", version, pad_version_name)
+
+        fpath = os.path.join(self.get_pad_dir(pad_name), pad_version_name)
+        pad_record = PadRecord.load_from_file(fpath)
+        print(pad_record)
+        return pad_record
 
         raise
 
@@ -260,7 +274,9 @@ class PadRegistry():
 
     def get_repo_by_name(self, name) -> PadRepo:
         return self.get_repos_by_name()[name]
-        pass
+
+    def get_repo_by_id(self, pad_id) -> PadRepo:
+        return self.get_repo_by_name(pad_id.repo)
 
     @classmethod
     def from_settings(cls) -> "PadRegistry":
@@ -289,3 +305,12 @@ class PadRegistry():
         repo = self.get_repo_by_name(repo_name)
         repo.register_pad(name=pad_name, pad=pad)
         logger.debug("Registered pad at %s/%s", repo_name, pad_name)
+
+    def get_pad_record(self, pad_id: PadID):
+        logger.debug("Getting pad %s", pad_id)
+
+        repo = self.get_repo_by_id(pad_id)
+        print(repo)
+        return repo.get_pad_by_id(pad_id)
+
+        raise
