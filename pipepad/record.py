@@ -8,6 +8,9 @@ from pathlib import Path
 from typing import Any, Tuple, Dict, Self
 
 import yaml
+from pygments import highlight
+from pygments.formatters.terminal import TerminalFormatter
+from pygments.lexers import guess_lexer
 
 from pipepad.config_old import PAD_EXTENSION, HEADER_START_STRING, HEADER_END_STRING, HEADER_VERSION_KEY, HEADER_DATE_KEY, \
     HEADER_NAME_KEY, HEADER_LANG_KEY, HEADER_HASH_KEY
@@ -268,3 +271,16 @@ class PadRecord(object):
             fil_txt = f.read()
 
             return fil_txt != txt
+
+    def pformat(self, syntax_highlight=True):
+        contents = self.get_full_text()
+
+        if syntax_highlight:
+            lexer = guess_lexer(contents)
+            return highlight(contents, lexer, TerminalFormatter())
+        else:
+            return contents
+
+    def pprint(self, **kwargs):
+        print(self.pformat(**kwargs))
+
