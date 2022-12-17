@@ -242,5 +242,3 @@ class PipePad:
 
             pad = PipePad(contents=contents, language=language)
             return pad
-
-

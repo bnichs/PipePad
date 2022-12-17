@@ -222,7 +222,7 @@ class PadRecord(object):
             header_hash = header.get_hash()
             pad = PipePad(contents=contents, language=lang)
 
-            logger.debug("Loaded contents from file: %s", repr(pad.contents))
+            # logger.debug("Loaded contents from file: %s", repr(pad.contents))
             pad_hash = pad.get_hash()
 
             if header_hash and header_hash != pad_hash:

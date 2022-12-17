@@ -4,6 +4,7 @@ command = ["pad", "--help"]
 timeout = 3
 print_output = true
 
+
 [[command]]
 name = "pad-config"
 command = ["pad", "config", "--help"]

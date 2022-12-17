@@ -87,8 +87,6 @@ def run_pad(pad_id: str):
 
 
 ### List
-
-
 @cli.group(name="list", help="List things")
 def list_things():
     pass
